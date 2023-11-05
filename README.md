@@ -1,39 +1,10 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+[![pub version](https://img.shields.io/pub/v/grex_floating_view.svg)](https://pub.dev/packages/grex_floating_view)
+[![Test Status](https://github.com/grex-corp/grex_floating_view/actions/workflows/tests.yml/badge.svg)](https://github.com/grex-corp/grex_ds_flutter/actions)
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+# Flutter In App Floating View (Picture in Picture)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+This project was born based on the need to have a PIP feature. The components are written using the Flutter Framework.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## License
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+`grex_floating_view` is under the [BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause).
