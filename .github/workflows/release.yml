@@ -18,8 +18,8 @@ jobs:
     outputs:
       tag: ${{ steps.gen-tag-step.outputs.tagname }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: jacopocarlini/action-autotag@2.0.4
+      - uses: actions/checkout@v3
+      - uses: jacopocarlini/action-autotag@3.0.0
         id: gen-tag-step
         with:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Get latest published release tag
         id: get_latest_release
-        uses: pozetroninc/github-action-get-latest-release@2b51d48e904071035d6632715d41966f516711dd
+        uses: pozetroninc/github-action-get-latest-release@v0.7.0
         with:
           repository: ${{ github.repository }}
           excludes: prerelease, draft
@@ -44,7 +44,7 @@ jobs:
           future_release: ${{ needs.auto-gen-tag.outputs.tag }}
           since_tag: ${{ steps.get_latest_release.outputs.release }}
       - name: Upload changelog
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: changelog
           path: CHANGELOG.md
@@ -57,7 +57,7 @@ jobs:
     steps:
       - run: echo ${{needs.auto-gen-tag.outputs.tag}}
       - name: Download changelog
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: changelog
       - name: Draft release with changelog
@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ needs.auto-gen-tag.outputs.tag }}
-          release_name: Blip DS ${{ needs.auto-gen-tag.outputs.tag }}
+          release_name: Grex Floating View ${{ needs.auto-gen-tag.outputs.tag }}
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
@@ -75,12 +75,12 @@ jobs:
   tests:
     name: Run Automated Tests
     needs: create-release
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.x'
       - name: Install dependencies
         run: flutter pub get
       - name: Run tests
@@ -95,7 +95,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.x'
       - name: Check Publish Warnings
         run: dart pub publish --dry-run
       - name: Publish
