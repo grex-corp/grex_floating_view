@@ -31,6 +31,31 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
 
   Offset _offset = Offset.zero;
 
+  @override
+  initState() {
+    super.initState();
+
+    handler.addListener(onListenersNotified);
+  }
+
+  @override
+  dispose() {
+    handler.removeListener(onListenersNotified);
+
+    super.dispose();
+  }
+
+  void onListenersNotified() {
+    if (handler.inFloatingViewMode != _isFloatingViewOn) {
+      _isFloatingViewOn = handler.inFloatingViewMode;
+      if (_isFloatingViewOn) {
+        _onFloatingViewOn();
+      } else {
+        _onFloatingViewOff();
+      }
+    }
+  }
+
   _onFloatingViewOn() {
     Future.delayed(const Duration(milliseconds: 100), () {
       handler.setShowSafeArea(false);
@@ -57,91 +82,77 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: handler,
-        builder: (context, _) {
-          if (handler.inFloatingViewMode != _isFloatingViewOn) {
-            _isFloatingViewOn = handler.inFloatingViewMode;
-            if (_isFloatingViewOn) {
-              _onFloatingViewOn();
-            } else {
-              _onFloatingViewOff();
-            }
-          }
+    return Stack(
+      children: [
+        AnimatedPositioned(
+          duration: handler.animationDuration,
+          left: _offset.dx,
+          top: _offset.dy,
+          child: Draggable(
+            feedback: const SizedBox.shrink(),
+            onDragUpdate: _isFloatingViewOn
+                ? (off) {
+                    setState(() {
+                      _offset = _offset.translate(off.delta.dx, off.delta.dy);
+                    });
+                  }
+                : null,
+            onDragEnd: _isFloatingViewOn
+                ? (DraggableDetails details) {
+                    if (details.velocity.pixelsPerSecond.dx < -1000) {
+                      widget.onClear();
+                    } else if (!handler.freeDrag) {
+                      final alignment = handler.calculateNearestAlignment(
+                        offset: _offset,
+                      );
 
-          return Stack(
-            children: [
-              AnimatedPositioned(
+                      setState(() {
+                        _offset = handler.getOffset(alignment);
+                      });
+                    }
+                  }
+                : null,
+            child: GestureDetector(
+              onTap: _isFloatingViewOn ? handler.disableFloatingView : null,
+              child: AnimatedContainer(
+                width: _size.width,
+                height: _size.height,
+                decoration: BoxDecoration(
+                  border: handler.border,
+                  borderRadius: handler.borderRadius,
+                ),
                 duration: handler.animationDuration,
-                left: _offset.dx,
-                top: _offset.dy,
-                child: Draggable(
-                  feedback: const SizedBox.shrink(),
-                  onDragUpdate: _isFloatingViewOn
-                      ? (off) {
-                          setState(() {
-                            _offset =
-                                _offset.translate(off.delta.dx, off.delta.dy);
-                          });
-                        }
-                      : null,
-                  onDragEnd: _isFloatingViewOn
-                      ? (DraggableDetails details) {
-                          if (details.velocity.pixelsPerSecond.dx < -1000) {
-                            widget.onClear();
-                          } else if (!handler.freeDrag) {
-                            final alignment = handler.calculateNearestAlignment(
-                              offset: _offset,
-                            );
-
-                            setState(() {
-                              _offset = handler.getOffset(alignment);
-                            });
-                          }
-                        }
-                      : null,
-                  child: GestureDetector(
-                    onTap:
-                        _isFloatingViewOn ? handler.disableFloatingView : null,
-                    child: AnimatedContainer(
-                      width: _size.width,
-                      height: _size.height,
-                      decoration: BoxDecoration(
-                        border: handler.border,
-                        borderRadius: handler.borderRadius,
-                      ),
-                      duration: handler.animationDuration,
-                      child: ClipRRect(
-                        borderRadius: handler.borderRadius,
-                        child: handler.inFloatingViewMode
-                            ? IgnorePointer(
-                                child: widget.child,
-                              )
-                            : widget.child,
-                      ),
-                    ),
+                child: ClipRRect(
+                  borderRadius: handler.borderRadius,
+                  child: IgnorePointer(
+                    ignoring: handler.inFloatingViewMode,
+                    child: widget.child,
                   ),
                 ),
               ),
-              Positioned(
-                left: handler.buttonOffset.dx,
-                top: handler.buttonOffset.dy,
-                child: AnimatedOpacity(
-                  opacity: !handler.inFloatingViewMode ? 1 : 0,
-                  duration: handler.animationDuration,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      child: handler.buttonIcon,
-                      onTap: () {
+            ),
+          ),
+        ),
+        Positioned(
+          left: handler.buttonOffset.dx,
+          top: handler.buttonOffset.dy,
+          child: AnimatedOpacity(
+            opacity: !handler.inFloatingViewMode ? 1 : 0,
+            duration: handler.animationDuration,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: !handler.inFloatingViewMode
+                    ? () {
                         handler.enableFloatingView();
-                      },
-                    ),
-                  ),
-                ),
+                      }
+                    : null,
+                child: handler.buttonIcon,
               ),
-            ],
-          );
-        });
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
