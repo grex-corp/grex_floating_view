@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Fixed floating view draggable gesture
+
 ## 0.0.3
 
 * Improved README

@@ -8,42 +8,46 @@ class GrxFloatingViewService {
   GrxFloatingViewService({
     required final BuildContext context,
     final GrxFloatingViewOptions? options,
-  }) : handler = GrxFloatingViewHandler(
+  }) : _handler = GrxFloatingViewHandler(
           context,
           options ?? GrxFloatingViewOptions(),
         );
 
-  final GrxFloatingViewHandler handler;
+  final GrxFloatingViewHandler _handler;
 
-  bool get showSafeArea => handler.showSafeArea;
-  bool get inFloatingViewMode => handler.inFloatingViewMode;
-  bool get overlayActive => handler.overlayActive;
+  Listenable get handler => _handler;
+
+  bool get showSafeArea => _handler.showSafeArea;
+  bool get inFloatingViewMode => _handler.inFloatingViewMode;
+  bool get overlayActive => _handler.overlayActive;
 
   void putOverlay({
     required final Widget widget,
   }) {
-    handler.showSafeArea = true;
-    handler.disableFloatingView();
+    _handler.showSafeArea = true;
+    _handler.disableFloatingView();
 
     final overlayEntry = OverlayEntry(
       builder: (context) => GrxFloatingViewWidget(
-        handler: handler,
+        handler: _handler,
         onClear: () {
-          handler.removeOverlay();
+          _handler.removeOverlay();
         },
         child: widget,
       ),
     );
 
-    handler.insertOverlay(overlayEntry);
+    _handler.insertOverlay(overlayEntry);
 
     /// TODO: Improve startWithFloatingViewOn feature
-    if (handler.startWithFloatingViewOn) {
-      handler.enableFloatingView();
+    if (_handler.startWithFloatingViewOn) {
+      _handler.enableFloatingView();
     }
   }
 
-  void enableFloatingView() => handler.enableFloatingView();
+  void removeOverlay() => _handler.removeOverlay();
 
-  void disableFloatingView() => handler.disableFloatingView();
+  void enableFloatingView() => _handler.enableFloatingView();
+
+  void disableFloatingView() => _handler.disableFloatingView();
 }

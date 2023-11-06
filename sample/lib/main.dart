@@ -38,6 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     options: GrxFloatingViewOptions(
       position: const GrxPosition(
         alignment: Alignment.bottomRight,
+        offset: Offset(0, 60),
       ),
       style: GrxFloatingViewStyle(
         border: Border.all(

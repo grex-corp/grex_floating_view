@@ -15,18 +15,21 @@ class GrxFloatingViewHandler with ChangeNotifier {
   bool inFloatingViewMode = false;
   bool showSafeArea = true;
 
-  bool get overlayActive => _overlayEntry != null;
   GrxAspectRatio get aspectRatio => _options.style.aspectRatio;
   Size get size =>
       Size(_options.style.width, _options.style.width / aspectRatio.value);
   BorderRadius get borderRadius => _options.style.borderRadius;
+
   Duration get animationDuration => _options.style.animationDuration;
+
   Border? get border => _options.style.border;
   Offset get offset => getOffset(
         _options.position.alignment,
         size: size,
         offset: _options.position.offset,
       );
+
+  bool get overlayActive => _overlayEntry != null;
   bool get startWithFloatingViewOn => _options.startWithFloatingViewOn;
   bool get freeDrag => _options.freeDrag;
 
@@ -41,13 +44,11 @@ class GrxFloatingViewHandler with ChangeNotifier {
 
   enableFloatingView() {
     inFloatingViewMode = true;
-    print("$inFloatingViewMode enableFloatingView");
     notifyListeners();
   }
 
   disableFloatingView() {
     inFloatingViewMode = false;
-    print("$inFloatingViewMode disableFloatingView");
     notifyListeners();
   }
 
@@ -93,8 +94,6 @@ class GrxFloatingViewHandler with ChangeNotifier {
           )
           .distanceSquared;
 
-      print('Alignment: ${alignment.toString()} Distance: $distance');
-
       return AlignmentDistance(
         alignment: alignment,
         distance: distance,
@@ -114,5 +113,9 @@ class GrxFloatingViewHandler with ChangeNotifier {
     final Size? size,
     final Offset? offset,
   }) =>
-      alignment.offset(_context, size ?? this.size, offset: offset);
+      alignment.offset(
+        _context,
+        size ?? this.size,
+        offset: offset ?? _options.position.offset,
+      );
 }

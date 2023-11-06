@@ -32,11 +32,7 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
   Offset _offset = Offset.zero;
 
   _onFloatingViewOn() {
-    print("true   ${handler.aspectRatio}");
-
     Future.delayed(const Duration(milliseconds: 100), () {
-      print("true   Future.microtask");
-
       handler.setShowSafeArea(false);
 
       setState(() {
@@ -64,8 +60,6 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
     return AnimatedBuilder(
         animation: handler,
         builder: (context, _) {
-          print("video_overlay_widget ${handler.inFloatingViewMode}");
-
           if (handler.inFloatingViewMode != _isFloatingViewOn) {
             _isFloatingViewOn = handler.inFloatingViewMode;
             if (_isFloatingViewOn) {
@@ -74,6 +68,7 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
               _onFloatingViewOff();
             }
           }
+
           return Stack(
             children: [
               AnimatedPositioned(
@@ -82,11 +77,6 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
                 top: _offset.dy,
                 child: Draggable(
                   feedback: const SizedBox.shrink(),
-                  onDragStarted: _isFloatingViewOn
-                      ? () {
-                          print("onDragStarted");
-                        }
-                      : null,
                   onDragUpdate: _isFloatingViewOn
                       ? (off) {
                           setState(() {
@@ -97,16 +87,12 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
                       : null,
                   onDragEnd: _isFloatingViewOn
                       ? (DraggableDetails details) {
-                          print("onDragEnd");
-
                           if (details.velocity.pixelsPerSecond.dx < -1000) {
                             widget.onClear();
                           } else if (!handler.freeDrag) {
                             final alignment = handler.calculateNearestAlignment(
                               offset: _offset,
                             );
-
-                            print('nearestAlignment: $alignment');
 
                             setState(() {
                               _offset = handler.getOffset(alignment);
@@ -127,7 +113,11 @@ class _GrxFloatingViewWidgetState extends State<GrxFloatingViewWidget> {
                       duration: handler.animationDuration,
                       child: ClipRRect(
                         borderRadius: handler.borderRadius,
-                        child: widget.child,
+                        child: handler.inFloatingViewMode
+                            ? IgnorePointer(
+                                child: widget.child,
+                              )
+                            : widget.child,
                       ),
                     ),
                   ),
