@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grx_floating_view/grx_floating_view.dart';
-import 'package:grx_floating_view/models/grx_floating_view_style.model.dart';
+import 'package:grex_floating_view/grx_floating_view.dart';
 
 import 'pages/list.page.dart';
 
