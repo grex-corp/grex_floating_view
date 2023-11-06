@@ -1,5 +1,6 @@
 [![pub version](https://img.shields.io/pub/v/grex_floating_view.svg)](https://pub.dev/packages/grex_floating_view)
-[![Test Status](https://github.com/grex-corp/grex_floating_view/actions/workflows/tests.yml/badge.svg)](https://github.com/grex-corp/grex_ds_flutter/actions)
+[![CI Status](https://github.com/grex-corp/grex_floating_view/actions/workflows/release.yml/badge.svg)](https://github.com/grex-corp/grex_ds_flutter/actions/workflows/release.yml)
+[![Test Status](https://github.com/grex-corp/grex_floating_view/actions/workflows/tests.yml/badge.svg)](https://github.com/grex-corp/grex_ds_flutter/actions/workflows/tests.yml)
 
 # Flutter In App Floating View (Picture in Picture)
 
