@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Fixed overlay state management
+
 ## 0.0.4
 
 * Fixed floating view draggable gesture
